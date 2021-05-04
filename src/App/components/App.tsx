@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import store from '../stores/store';
 import { bugActions } from '../actions/bug';
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,29 +6,14 @@ import IBug from '../reducers/bug/bug';
 
 const unsubscribe = store.subscribe(() => console.log(store.getState()));
 
-// store.dispatch(
-//   bugActions.issueBug({
-//     issuerName: "Dennis Gonzales",
-//     timestamp: new Date().toDateString(),
-//     title: "Test",
-//     description: "Some bug issue!"
-//   })
-// );
-
-// store.dispatch(bugActions.resolveBug(1));
-// store.dispatch(bugActions.deleteBug(1));
-
 const App: React.FC = (): JSX.Element => {
 
   const bug: IBug[] = useSelector((state: { bug: IBug[] }) => state.bug);
   const dispatch = useDispatch();
 
-  const issueBugTest = bugActions.issueBug({
-    issuerName: "Dennis Gonzales",
-    timestamp: new Date().toDateString(),
-    title: "Test",
-    description: "Some bug issue!"
-  });
+  const [name, setName] = useState<string>("");
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   React.useEffect(() => {
     return () => unsubscribe(); // unsubscribe to prevent memory leaks
@@ -36,8 +21,29 @@ const App: React.FC = (): JSX.Element => {
 
   return (
     <div>
-      <h5>Name: {bug ? bug[0]?.issuerName : "Hello"}</h5>
-      <button onClick={() => dispatch(issueBugTest)}>Issue bug</button>
+      <button onClick={() => dispatch(bugActions.issueBug({
+        issuerName: name,
+        timestamp: new Date().toDateString(),
+        title: title,
+        description: description
+      }))}
+      >Issue bug</button>
+
+      <input type="text" placeholder="issuer name" value={name} onChange={(e) => setName(e.target.value)} />
+      <input type="text" placeholder="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <input type="text" placeholder="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+
+      {bug.map(bug => (
+        <div key={bug.id}>
+          
+          <h3>ID: {bug.id}</h3>
+          <h3>Title: {bug.title}</h3>
+          <p>Description: {bug.description}</p>
+          <p>Issuer Name: {bug.issuerName}</p>
+          <p>Timestamp: {bug.timestamp}</p>
+        </div>
+      ))}
+
     </div>
   )
 }

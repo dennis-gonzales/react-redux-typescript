@@ -9,7 +9,7 @@ const bugReducer = (state: IBug[] = [], action: IBugAction<IBug>): IBug[] => {
             return [
                 ...state,
                 {
-                    id: ++lastId,
+                    id: lastId++,
                     issuerName: action.payload.issuerName || "No name",
                     timestamp: action.payload.timestamp || "No date",
                     title: action.payload.title || "Untitled",
