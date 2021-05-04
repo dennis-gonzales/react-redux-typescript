@@ -9,11 +9,11 @@ store.dispatch(
     issuerName: "Dennis Gonzales",
     timestamp: new Date().toDateString(),
     title: "Test",
-    description: "Some bug issue!",
-    resolved: false
+    description: "Some bug issue!"
   })
 );
 
+store.dispatch(bugActions.resolveBug(1));
 store.dispatch(bugActions.deleteBug(1));
 
 const App: React.FC = (): JSX.Element => {
